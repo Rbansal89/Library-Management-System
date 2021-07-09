@@ -1,11 +1,65 @@
+import xlsxwriter
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import sys
 import mysql.connector
+import datetime
+from xlrd import open_workbook
+from xlsxwriter import Workbook
+
 from PyQt5.uic import loadUiType
 
 ui, _ = loadUiType('library.ui')
+login,_ = loadUiType('login.ui')
+
+
+class Login(QWidget, login):
+
+    def __init__(self):
+        QWidget.__init__(self)
+        self.setupUi(self)
+        self.Message_label.setHidden(True)
+        self.login_status = False
+        self.Login_pushButton.clicked.connect(self.Handle_Login)
+
+
+    def Handle_Login(self):
+        # # Connecting to the database
+        # self.db_con = mysql.connector.connect(user="root", password="2894", host="localhost", database="library")
+        # self.cur = self.db_con.cursor()
+        #
+        # username = self.username_lineEdit.text()
+        # password = self.password_lineEdit.text()
+        #
+        # print(username,password)
+        #
+        # # getting user login info
+        # self.cur.execute(
+        #     '''SELECT * from user where user_name = %s''', (username,))
+        # data = self.cur.fetchone()
+        # print(data)
+        #
+        # if data is not None:
+        #     if data[3] != password:
+        #         print("not login")
+        #     else:
+        #         print("Login")
+        #         self.login_status = True
+        # else:
+        #     print("wrong")
+        #
+        # print("Done")
+        # # Closing the Database Connection.
+        # self.db_con.close()
+        # self.cur.close()
+
+        #if self.login_status:
+        self.window2 = MainWindow()
+        self.close()
+        self.window2.show()
+        # else:
+        #     self.Message_label.setHidden(False)
 
 
 class MainWindow(QMainWindow, ui):
@@ -22,6 +76,9 @@ class MainWindow(QMainWindow, ui):
         # To check if logedin for editing information
         self.login_status = False
 
+        # To Show data in day to day operations table
+        self.Show_All_Operations()
+
         # To show data in table widgets in settings tab
         self.Show_Categories()
         self.Show_Authors()
@@ -32,11 +89,17 @@ class MainWindow(QMainWindow, ui):
         self.Show_Author_Combobox()
         self.Show_Publisher_Combobox()
 
+        # To show data in Book table
+        self.Show_All_Books()
+        # To show data in client table
+        self.Show_All_Client()
+
 
     def HandleUi_Changes(self):
         self.Hiding_Themes()
         self.Open_Day_To_Day_Tab()
         self.main_tabWidget.tabBar().setVisible(False)
+
 
     def Handle_Buttons(self):
         # Button to show themes groupbox
@@ -46,8 +109,9 @@ class MainWindow(QMainWindow, ui):
 
         # Buttons changing Main Tabs
         self.dayToDay_pushButton.clicked.connect(self.Open_Day_To_Day_Tab)
-        self.book_pushButto.clicked.connect(self.Open_Books_Tab)
+        self.book_pushButton.clicked.connect(self.Open_Books_Tab)
         self.user_pushButton.clicked.connect(self.Open_Users_Tab)
+        self.client_pushButton.clicked.connect(self.Open_Clients_Tab)
         self.setting_pushButton.clicked.connect(self.Open_Settings_Tab)
 
         # Button to add new book
@@ -62,11 +126,22 @@ class MainWindow(QMainWindow, ui):
         self.Add_User_pushButton.clicked.connect(self.Add_New_User)
         self.Edit_user_login_pushButton.clicked.connect(self.Edit_User_Login)
         self.Save_User_Info_pushButton.clicked.connect(self.Edit_User_Info)
+        self.Delete_Client_pushButton.clicked.connect(self.Delete_Client)
+
+        # Button to add new client, edit and delete client info
+        self.Add_Client_pushButton.clicked.connect(self.Add_New_Client)
+        self.Search_Client_pushButton.clicked.connect(self.Search_Client)
+        self.Save_Edited_Client_pushButton.clicked.connect(self.Save_Edit_Client_Info)
 
         # Settings tab buttons to add categories, authors, publisehrs
         self.Add_New_Category_pushButton.clicked.connect(self.Add_Category)
         self.Add_New_Author_pushButton.clicked.connect(self.Add_Author)
         self.Add_New_Publisher_pushButton.clicked.connect(self.Add_Publisher)
+
+        # Button to Export Data
+        self.Export_day_operations_pushButton.clicked.connect(self.Export_Day_Operations)
+        self.Export_Books_pushButton.clicked.connect(self.Export_Books)
+        self.Export_Clients_pushButton.clicked.connect(self.Export_Clients)
 
         # Themes Buttons
         self.QDark_Theme_pushButton.clicked.connect(self.QDark_Theme)
@@ -74,12 +149,17 @@ class MainWindow(QMainWindow, ui):
         self.Dark_Blue_Theme_pushButton.clicked.connect(self.Dark_Blue_Theme)
         self.Dark_Grey_Theme_pushButton.clicked.connect(self.Dark_Grey_Theme)
 
+        # Add New Book
+        self.Add_New_Operations_pushButton.clicked.connect(self.Handle_Day_Operations)
+
 
     def Show_Themes(self):
         self.theme_groupBox.show()
 
+
     def Hiding_Themes(self):
         self.theme_groupBox.hide()
+
 
     #####################################################
     ########### Openign Tabs ############################
@@ -97,13 +177,116 @@ class MainWindow(QMainWindow, ui):
         self.main_tabWidget.setCurrentIndex(2)
 
 
-    def Open_Settings_Tab(self):
+    def Open_Clients_Tab(self):
         self.main_tabWidget.setCurrentIndex(3)
+        self.Clients_tabWidget.setCurrentIndex(0)
+
+
+    def Open_Settings_Tab(self):
+        self.main_tabWidget.setCurrentIndex(4)
         self.Settings_tabWidget.setCurrentIndex(0)
 
 
     #####################################################
+    ############# Day to Day Operations #################
+
+    def Show_All_Operations(self):
+
+        # Connecting to database
+        self.db_con = mysql.connector.connect(user='root', password='2894', host='localhost', database='library')
+        self.cur = self.db_con.cursor()
+
+        # Getting data from the database
+        self.cur.execute(
+            '''SELECT * FROM dayoperations'''
+        )
+
+        data = self.cur.fetchall()
+
+        if data is not None:
+            self.Day_Operations_tableWidget.setRowCount(0)
+            for row, form in enumerate(data):
+                self.Day_Operations_tableWidget.insertRow(row)
+                for col, item in enumerate(form[1:4]+form[5:]):
+                    self.Day_Operations_tableWidget.setItem(row, col, QTableWidgetItem(str(item)))
+
+        # Closing the Database Connection.
+        self.db_con.close()
+        self.cur.close()
+
+
+    def Handle_Day_Operations(self):
+
+        book_title = self.Enter_Book_title_lineEdit.text()
+        client_name = self.Enter_Client_Name_lineEdit.text()
+        type = self.Type_comboBox.currentText()
+        days_number = self.Days_comboBox.currentIndex() + 1
+        today_date = datetime.date.today()
+        to_date = today_date+ datetime.timedelta(days = days_number)
+
+        # Connecting to database
+        self.db_con = mysql.connector.connect(user='root', password='2894', host='localhost', database='library')
+        self.cur = self.db_con.cursor()
+
+        print(book_title, client_name, type, days_number, today_date, to_date)
+
+        # Getting Books data from book table
+        self.cur.execute(
+            '''INSERT INTO dayoperations
+            (book_name, client_name, type, days, from_date, to_date)
+            VALUES (%s, %s, %s, %s, %s, %s)''', (book_title, client_name, type, days_number + 1, str(today_date), str(to_date)))
+
+        # Committing changes to the database
+        self.db_con.commit()
+        self.statusBar().showMessage("New Operation Added")
+
+        # Closing the Database Connection.
+        self.db_con.close()
+        self.cur.close()
+
+        # Clearing all fields
+        self.Enter_Book_title_lineEdit.setText('')
+        self.Enter_Client_Name_lineEdit.setText('')
+        self.Type_comboBox.setCurrentIndex(0)
+        self.Days_comboBox.setCurrentIndex(0)
+
+        # Updating day to day operations table
+        self.Show_All_Operations()
+
+    #####################################################
     ################## Books ############################
+
+    def Show_All_Books(self):
+
+        # Connecting to database
+        self.db_con = mysql.connector.connect(user='root', password='2894', host='localhost', database='library')
+        self.cur = self.db_con.cursor()
+
+        # Getting Books data from book table
+        self.cur.execute('''SELECT * FROM book''')
+
+        data = self.cur.fetchall()
+
+        if data is not None:
+            self.Books_show_tableWidget.setRowCount(0)
+            for row, form in enumerate(data):
+                self.Books_show_tableWidget.insertRow(row)
+                col = 0
+                for item in form[1:4]:
+                    self.Books_show_tableWidget.setItem(row, col, QTableWidgetItem(str(item)))
+                    col += 1
+                value1 = self.category_comboBox.itemText(form[4])
+                value2 = self.Author_comboBox.itemText(form[5])
+                value3 = self.Publisher_comboBox.itemText(form[6])
+                self.Books_show_tableWidget.setItem(row,3,QTableWidgetItem(value1) )
+                self.Books_show_tableWidget.setItem(row,4,QTableWidgetItem(value2) )
+                self.Books_show_tableWidget.setItem(row,5,QTableWidgetItem(value3) )
+                self.Books_show_tableWidget.setItem(row,6,QTableWidgetItem(str(form[7])) )
+
+
+        # Closing the Database Connection.
+        self.db_con.close()
+        self.cur.close()
 
 
     def Add_New_Book(self):
@@ -127,7 +310,7 @@ class MainWindow(QMainWindow, ui):
         (book_name, book_description, book_code, book_category, book_author,
         book_publisher, book_price)
         VALUES (%s,%s,%s,%s,%s,%s,%s)'''
-        ,(book_title, book_description, book_code, category+1, author+1, publisher+1,book_price))
+        ,(book_title, book_description, book_code, category, author, publisher,book_price))
 
         # Commiting the changes to the database
         self.db_con.commit()
@@ -146,6 +329,9 @@ class MainWindow(QMainWindow, ui):
         self.Publisher_comboBox.setCurrentIndex(0)
         self.book_price_lineEdit.setText('')
 
+        # Updating book table
+        self.Show_All_Books()
+
 
     def Search_Book(self):
 
@@ -162,24 +348,25 @@ class MainWindow(QMainWindow, ui):
         )
         data = self.cur.fetchall()
 
-        print(data)
         self.searched_book_id = data[0][0]
 
-        # Displaying Retrieved Book data in the tab
-        self.Edit_Book_Title_lineEdit.setText(str(data[0][1]))
-        self.Edit_Book_Description_plainTextEdit.setPlainText(str(data[0][2]))
-        self.Edit_Book_Code_lineEdit.setText(str(data[0][3]))
-        self.Edit_book_category_comboBox.setCurrentIndex(data[0][4]-1)
-        self.Edit_Book_Author_comboBox.setCurrentIndex(data[0][5]-1)
-        self.Edit_Book_Publisher_comboBox.setCurrentIndex(data[0][6]-1)
-        self.Edit_Book_Price_lineEdit.setText(str(data[0][7]))
+        if data is not None:
+            # Displaying Retrieved Book data in the tab
+            self.Edit_Book_Title_lineEdit.setText(str(data[0][1]))
+            self.Edit_Book_Description_plainTextEdit.setPlainText(str(data[0][2]))
+            self.Edit_Book_Code_lineEdit.setText(str(data[0][3]))
+            self.Edit_book_category_comboBox.setCurrentIndex(data[0][4])
+            self.Edit_Book_Author_comboBox.setCurrentIndex(data[0][5])
+            self.Edit_Book_Publisher_comboBox.setCurrentIndex(data[0][6])
+            self.Edit_Book_Price_lineEdit.setText(str(data[0][7]))
 
-        # Set the book title line edit to empty
-        #self.Search_Book_title_lineEdit.setText('')
+            # Set the book title line edit to empty
+            #self.Search_Book_title_lineEdit.setText('')
 
         # Closing the Database Connection.
         self.db_con.close()
         self.cur.close()
+
 
     def Edit_Book(self):
 
@@ -201,7 +388,7 @@ class MainWindow(QMainWindow, ui):
         self.cur.execute(
             '''UPDATE book SET book_name = %s, book_description = %s,book_code = %s, book_category = %s,
             book_author = %s, book_publisher = %s, book_price = %s WHERE (id = %s)'''
-        , (book_title,description, book_code, category+1, author+1, publisher+1, price, id))
+        , (book_title,description, book_code, category, author, publisher, price, id))
 
         # Commit changes to the database
         self.db_con.commit()
@@ -212,6 +399,8 @@ class MainWindow(QMainWindow, ui):
         self.cur.close()
 
         # Clearing Book data in the tab
+
+        self.Search_Book_title_lineEdit.setText('')
         self.Edit_Book_Title_lineEdit.setText('')
         self.Edit_Book_Description_plainTextEdit.setPlainText('')
         self.Edit_Book_Code_lineEdit.setText('')
@@ -219,6 +408,10 @@ class MainWindow(QMainWindow, ui):
         self.Edit_Book_Author_comboBox.setCurrentIndex(0)
         self.Edit_Book_Publisher_comboBox.setCurrentIndex(0)
         self.Edit_Book_Price_lineEdit.setText('')
+
+        # Updating book table
+        self.Show_All_Books()
+
 
     def Delete_Book(self):
 
@@ -257,10 +450,12 @@ class MainWindow(QMainWindow, ui):
         self.Edit_Book_Publisher_comboBox.setCurrentIndex(0)
         self.Edit_Book_Price_lineEdit.setText('')
 
+        # Updating book table
+        self.Show_All_Books()
+
 
     #####################################################
     ################## Users ############################
-
 
     def Add_New_User(self):
 
@@ -298,6 +493,7 @@ class MainWindow(QMainWindow, ui):
             self.Add_Password_lineEdit.setText('')
             self.Add_Confirm_Password_lineEdit.setText('')
 
+
     def Edit_User_Login(self):
 
         # Connecting to the database
@@ -321,11 +517,11 @@ class MainWindow(QMainWindow, ui):
                 self.statusBar().showMessage("Login Successful")
         else:
             self.statusBar().showMessage("Either Username or Password is Incorrect")
-        print("running")
 
         # Closing the Database Connection.
         self.db_con.close()
         self.cur.close()
+
 
     def Edit_User_Info(self):
 
@@ -371,8 +567,164 @@ class MainWindow(QMainWindow, ui):
 
 
     #####################################################
-    ################## Settings #########################
+    ################## Users ############################
 
+    def Show_All_Client(self):
+
+        # Connecting to the database
+        self.db_con = mysql.connector.connect(user="root", password="2894", host="localhost", database="library")
+        self.cur = self.db_con.cursor()
+
+        # Getting Client data fron client table in database
+        self.cur.execute('''SELECT * FROM client''')
+
+        data = self.cur.fetchall()
+
+        if data is not None:
+            self.Client_tableWidget.setRowCount(0)
+            for row, form in enumerate(data):
+                self.Client_tableWidget.insertRow(row)
+                for col, item in enumerate(form[1:]):
+                    self.Client_tableWidget.setItem(row,col, QTableWidgetItem(str(item)))
+
+        # Closing the Database Connection.
+        self.db_con.close()
+        self.cur.close()
+
+
+    def Add_New_Client(self):
+
+        client_name = self.Add_Client_Name_lineEdit.text()
+        client_email = self.Add_Client_email_lineEdit.text()
+        client_id = self.Add_Client_id_lineEdit.text()
+
+        # Connecting to the database
+        self.db_con = mysql.connector.connect(user="root", password="2894", host="localhost", database="library")
+        self.cur = self.db_con.cursor()
+
+        print(client_id,client_email,client_name)
+
+        # Inserting new client row in client table in database
+        self.cur.execute(
+            '''INSERT INTO client
+            (client_name, client_email, client_id)
+            VALUES (%s, %s, %s)''',
+            (client_name,client_email,client_id))
+
+        # Commiting to the database
+        self.db_con.commit()
+        self.statusBar().showMessage("Client Added Successfully")
+        print("Done")
+
+        # Closing the Database Connection.
+        self.db_con.close()
+        self.cur.close()
+
+        self.Add_Client_Name_lineEdit.setText("")
+        self.Add_Client_email_lineEdit.setText("")
+        self.Add_Client_id_lineEdit.setText("")
+
+        # Updating Client Table Values
+        self.Show_All_Client()
+
+
+    def Search_Client(self):
+
+        client_search_id = self.Search_Client_id_lineEdit.text()
+
+        # Connecting to the database
+        self.db_con = mysql.connector.connect(user="root", password="2894", host="localhost", database="library")
+        self.cur = self.db_con.cursor()
+
+        # Searching for client in client table in database
+        self.cur.execute(
+            '''SELECT * from client WHERE client_id = %s''',(client_search_id,))
+
+        data = self.cur.fetchone()
+
+        if data:
+            self.Edit_Client_Name_lineEdit.setText(str(data[1]))
+            self.Edit_Client_Email_lineEdit.setText(str(data[2]))
+            self.Edit_Client_id_lineEdit.setText(str(data[3]))
+            self.statusBar().showMessage("Client Found!")
+        else:
+            self.statusBar().showMessage("Client Not Found!")
+
+        # Closing the Database Connection.
+        self.db_con.close()
+        self.cur.close()
+
+
+    def Save_Edit_Client_Info(self):
+
+        client_name = self.Edit_Client_Name_lineEdit.text()
+        client_email = self.Edit_Client_Email_lineEdit.text()
+        client_id = self.Edit_Client_id_lineEdit.text()
+
+        client_search_id = self.Search_Client_id_lineEdit.text()
+
+        # Connecting to the database
+        self.db_con = mysql.connector.connect(user="root", password="2894", host="localhost", database="library")
+        self.cur = self.db_con.cursor()
+
+        # Updating Client Info
+        self.cur.execute(
+            '''UPDATE client
+            SET client_name = %s, client_email = %s, client_id = %s
+            WHERE client_id = %s''', (client_name,client_email,client_id,client_search_id))
+
+        # Commit changes to database
+        self.db_con.commit()
+        self.statusBar().showMessage("Client Data Updated")
+
+        # Closing the Database Connection.
+        self.db_con.close()
+        self.cur.close()
+
+        #Updating Client table
+        self.Show_All_Client()
+
+
+    def Delete_Client(self):
+
+        client_search_id = self.Search_Client_id_lineEdit.text()
+
+        if client_search_id != "":
+
+            delete_message = QMessageBox.warning(
+                self,
+                "Warning!",
+                "Do you want to Delete this Client?",
+                QMessageBox.Yes | QMessageBox.No
+            )
+
+            if delete_message == QMessageBox.Yes:
+                # Connecting to the database
+                self.db_con = mysql.connector.connect(user="root", password="2894", host="localhost", database="library")
+                self.cur = self.db_con.cursor()
+
+                # Delete Client from client table in database
+                self.cur.execute(
+                    '''Delete FROM client WHERE client_id = %s''', (client_search_id,))
+
+                # Commiting changes to database
+                self.db_con.commit()
+                self.statusBar().showMessage("Client Data Deleted")
+
+                # Closing the Database Connection.
+                self.db_con.close()
+                self.cur.close()
+
+                # Updating Client Table
+                self.Show_All_Client()
+            else:
+                return
+        else:
+            self.statusBar().showMessage("Please Enter Correct Client Id!")
+
+
+    #####################################################
+    ################## Settings #########################
 
     def Add_Category(self):
 
@@ -593,6 +945,131 @@ class MainWindow(QMainWindow, ui):
         self.db_con.close()
         self.cur.close()
 
+
+    #####################################################
+    ################# Export Data #######################
+
+    def Export_Day_Operations(self):
+
+        # Conneting to the database library
+        self.db_con = mysql.connector.connect(user="root", password="2894", host="localhost", database="library")
+        self.cur = self.db_con.cursor()
+
+        # Retreiving all the categories data from the database
+        self.cur.execute('''SELECT * FROM dayoperations''')
+        data = self.cur.fetchall()
+
+        with xlsxwriter.Workbook('Day_operations.xlsx') as wb:
+
+            sheet1 = wb.add_worksheet('Sheet 1')
+
+            # Sheet formatting
+            sheet1.set_column(0,5,30)
+
+            # Formatting for Headers
+            header_format = wb.add_format({'bold': True, 'align': 'center', 'font_size' : 16})
+            data_format = wb.add_format({'font_size' : 14})
+
+            # Adding Headers to sheet
+            sheet1.write(0,0, "Book Title", header_format)
+            sheet1.write(0,1, "Client Name", header_format)
+            sheet1.write(0,2, "Type", header_format)
+            sheet1.write(0,3, "Days", header_format)
+            sheet1.write(0,4, "From - Date", header_format)
+            sheet1.write(0,5, "To - Date", header_format)
+
+            if data is not None:
+                for row, form in enumerate(data):
+                    for col, item in enumerate(form[1:]):
+                        sheet1.write(row+1,col, str(item), data_format)
+
+            self.statusBar().showMessage("File Exported Successfully")
+
+        # Closing the connection with database
+        self.db_con.close()
+        self.cur.close()
+
+
+    def Export_Books(self):
+
+        # Conneting to the database library
+        self.db_con = mysql.connector.connect(user="root", password="2894", host="localhost", database="library")
+        self.cur = self.db_con.cursor()
+
+        # Retreiving all the categories data from the database
+        self.cur.execute('''SELECT * FROM book''')
+        data = self.cur.fetchall()
+
+        with xlsxwriter.Workbook('Books_data.xlsx') as wb:
+
+            sheet1 = wb.add_worksheet('Sheet 1')
+
+            # Sheet formatting
+            sheet1.set_column(0,6,22)
+
+            # Formatting for Headers
+            header_format = wb.add_format({'bold': True, 'align': 'center', 'font_size' : 15})
+            data_format = wb.add_format({'font_size' : 13})
+
+            # Adding Headers to sheet
+            sheet1.write(0,0, "Book Title", header_format)
+            sheet1.write(0,1, "Book Description", header_format)
+            sheet1.write(0,2, "Book Code", header_format)
+            sheet1.write(0,3, "Category", header_format)
+            sheet1.write(0,4, "Author", header_format)
+            sheet1.write(0,5, "Publisher", header_format)
+            sheet1.write(0,6, "Price", header_format)
+
+            if data is not None:
+                for row, form in enumerate(data):
+                    for col, item in enumerate(form[1:]):
+                        sheet1.write(row+1,col, str(item), data_format)
+
+            self.statusBar().showMessage("File Exported Successfully")
+
+        # Closing the connection with database
+        self.db_con.close()
+        self.cur.close()
+
+
+    def Export_Clients(self):
+
+        # Conneting to the database library
+        self.db_con = mysql.connector.connect(user="root", password="2894", host="localhost", database="library")
+        self.cur = self.db_con.cursor()
+
+        # Retreiving all the categories data from the database
+        self.cur.execute('''SELECT * FROM client''')
+        data = self.cur.fetchall()
+
+        with xlsxwriter.Workbook('Clients_data.xlsx') as wb:
+
+            sheet1 = wb.add_worksheet('Sheet 1')
+
+            # Sheet formatting
+            sheet1.set_column(0, 2, 30)
+
+            # Formatting for Headers
+            header_format = wb.add_format({'bold': True, 'align': 'center', 'font_size': 16})
+            data_format = wb.add_format({'font_size': 14})
+
+            # Adding Headers to sheet
+            sheet1.write(0, 0, "Client Name", header_format)
+            sheet1.write(0, 1, "Client Email", header_format)
+            sheet1.write(0, 2, "Client Id", header_format)
+
+            if data is not None:
+                for row, form in enumerate(data):
+                    for col, item in enumerate(form[1:]):
+                        sheet1.write(row + 1, col, str(item), data_format)
+
+            self.statusBar().showMessage("File Exported Successfully")
+
+        # Closing the connection with database
+        self.db_con.close()
+        self.cur.close()
+
+
     #####################################################
     ################## UI Themes ########################
 
@@ -607,10 +1084,12 @@ class MainWindow(QMainWindow, ui):
         style = style.read()
         self.setStyleSheet(style)
 
+
     def Dark_Orange_Theme(self):
         style = open('themes/darkorange.css', 'r')
         style = style.read()
         self.setStyleSheet(style)
+
 
     def QDark_Theme(self):
         style = open('themes/qdark.css', 'r')
@@ -620,7 +1099,7 @@ class MainWindow(QMainWindow, ui):
 
 def main():
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = Login()
     window.show()
     app.exec()
 
