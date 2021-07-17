@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>986</width>
-    <height>499</height>
+    <height>470</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QPushButton" name="dayToDay_pushButton">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>40</y>
-      <width>91</width>
-      <height>71</height>
+      <x>40</x>
+      <y>30</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="text">
@@ -37,13 +37,13 @@
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="book_pushButto">
+   <widget class="QPushButton" name="book_pushButton">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>120</y>
-      <width>91</width>
-      <height>71</height>
+      <x>40</x>
+      <y>100</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="text">
@@ -63,10 +63,10 @@
    <widget class="QPushButton" name="user_pushButton">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>200</y>
-      <width>91</width>
-      <height>71</height>
+      <x>40</x>
+      <y>170</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="text">
@@ -86,10 +86,10 @@
    <widget class="QPushButton" name="setting_pushButton">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>280</y>
-      <width>91</width>
-      <height>71</height>
+      <x>40</x>
+      <y>310</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="text">
@@ -109,10 +109,10 @@
    <widget class="QPushButton" name="theme_pushButton">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>360</y>
-      <width>91</width>
-      <height>71</height>
+      <x>40</x>
+      <y>380</y>
+      <width>71</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="text">
@@ -134,8 +134,8 @@
      <rect>
       <x>140</x>
       <y>10</y>
-      <width>831</width>
-      <height>431</height>
+      <width>851</width>
+      <height>441</height>
      </rect>
     </property>
     <property name="font">
@@ -148,13 +148,13 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
       <string>Tab 1</string>
      </attribute>
-     <widget class="QPushButton" name="pushButton_6">
+     <widget class="QPushButton" name="Add_New_Operations_pushButton">
       <property name="geometry">
        <rect>
         <x>660</x>
@@ -167,11 +167,11 @@
        <string>Add</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit">
+     <widget class="QLineEdit" name="Enter_Book_title_lineEdit">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>40</y>
+        <x>40</x>
+        <y>10</y>
         <width>191</width>
         <height>41</height>
        </rect>
@@ -180,7 +180,7 @@
        <string>Enter Book Title</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="comboBox">
+     <widget class="QComboBox" name="Type_comboBox">
       <property name="geometry">
        <rect>
         <x>320</x>
@@ -247,7 +247,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QComboBox" name="comboBox_3">
+     <widget class="QComboBox" name="Days_comboBox">
       <property name="geometry">
        <rect>
         <x>520</x>
@@ -307,13 +307,13 @@
        </property>
       </item>
      </widget>
-     <widget class="QTableWidget" name="tableWidget">
+     <widget class="QTableWidget" name="Day_Operations_tableWidget">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>120</y>
+        <y>110</y>
         <width>831</width>
-        <height>291</height>
+        <height>261</height>
        </rect>
       </property>
       <property name="font">
@@ -324,34 +324,55 @@
       </property>
       <column>
        <property name="text">
-        <string>Book Code</string>
+        <string>Book Name</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Book Title</string>
+        <string>Client Name</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Book Author</string>
+        <string>Type</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Book Publisher</string>
+        <string>From</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Book Category</string>
+        <string>To</string>
        </property>
       </column>
-      <column>
-       <property name="text">
-        <string>Book Price</string>
-       </property>
-      </column>
+     </widget>
+     <widget class="QLineEdit" name="Enter_Client_Name_lineEdit">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>60</y>
+        <width>191</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>Enter Client Name</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="Export_day_operations_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>380</y>
+        <width>261</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Export Day Operations to Excel File</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
@@ -363,8 +384,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>831</width>
-        <height>411</height>
+        <width>851</width>
+        <height>441</height>
        </rect>
       </property>
       <property name="font">
@@ -375,6 +396,69 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <widget class="QWidget" name="tab_10">
+       <attribute name="title">
+        <string>All Books</string>
+       </attribute>
+       <widget class="QTableWidget" name="Books_show_tableWidget">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>841</width>
+          <height>331</height>
+         </rect>
+        </property>
+        <column>
+         <property name="text">
+          <string>Book Title</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Book Description</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Book Code</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Book Category</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Book Author</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Book Publisher</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Book Price</string>
+         </property>
+        </column>
+       </widget>
+       <widget class="QPushButton" name="Export_Books_pushButton">
+        <property name="geometry">
+         <rect>
+          <x>550</x>
+          <y>350</y>
+          <width>261</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Export Books to Excel File</string>
+        </property>
+       </widget>
+      </widget>
       <widget class="QWidget" name="tab_5">
        <attribute name="title">
         <string>Add New Book</string>
@@ -1200,6 +1284,353 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_11">
+     <attribute name="title">
+      <string>Page</string>
+     </attribute>
+     <widget class="QTabWidget" name="Clients_tabWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>851</width>
+        <height>441</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab_12">
+       <attribute name="title">
+        <string>All Clients</string>
+       </attribute>
+       <widget class="QTableWidget" name="Client_tableWidget">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>841</width>
+          <height>331</height>
+         </rect>
+        </property>
+        <column>
+         <property name="text">
+          <string>Client Name</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Client Email</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Client Id</string>
+         </property>
+        </column>
+       </widget>
+       <widget class="QPushButton" name="Export_Clients_pushButton">
+        <property name="geometry">
+         <rect>
+          <x>590</x>
+          <y>350</y>
+          <width>221</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Export Clients to Excel File</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_13">
+       <attribute name="title">
+        <string>Add New Client</string>
+       </attribute>
+       <widget class="QLineEdit" name="Add_Client_email_lineEdit">
+        <property name="geometry">
+         <rect>
+          <x>280</x>
+          <y>110</y>
+          <width>201</width>
+          <height>31</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="Add_Client_Name_lineEdit">
+        <property name="geometry">
+         <rect>
+          <x>280</x>
+          <y>50</y>
+          <width>201</width>
+          <height>31</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="Add_Client_id_lineEdit">
+        <property name="geometry">
+         <rect>
+          <x>280</x>
+          <y>170</y>
+          <width>201</width>
+          <height>31</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="Add_Client_pushButton">
+        <property name="geometry">
+         <rect>
+          <x>290</x>
+          <y>240</y>
+          <width>151</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Add New Client</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_30">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>50</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Client Name</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_31">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>110</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Client Email</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_33">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>170</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Client Id</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_14">
+       <attribute name="title">
+        <string>Edit or Delete a Client</string>
+       </attribute>
+       <widget class="QLabel" name="label_37">
+        <property name="geometry">
+         <rect>
+          <x>60</x>
+          <y>20</y>
+          <width>111</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Client ID</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="Save_Edited_Client_pushButton">
+        <property name="geometry">
+         <rect>
+          <x>490</x>
+          <y>290</y>
+          <width>141</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Save</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="Search_Client_id_lineEdit">
+        <property name="geometry">
+         <rect>
+          <x>190</x>
+          <y>20</y>
+          <width>201</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="placeholderText">
+         <string>Enter Client ID to search</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="Search_Client_pushButton">
+        <property name="geometry">
+         <rect>
+          <x>460</x>
+          <y>20</y>
+          <width>151</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Search</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="Delete_Client_pushButton">
+        <property name="geometry">
+         <rect>
+          <x>80</x>
+          <y>290</y>
+          <width>141</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Delete</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="Edit_Client_Email_lineEdit">
+        <property name="geometry">
+         <rect>
+          <x>320</x>
+          <y>160</y>
+          <width>201</width>
+          <height>31</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_34">
+        <property name="geometry">
+         <rect>
+          <x>190</x>
+          <y>220</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Client Id</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_35">
+        <property name="geometry">
+         <rect>
+          <x>190</x>
+          <y>100</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Client Name</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_32">
+        <property name="geometry">
+         <rect>
+          <x>190</x>
+          <y>160</y>
+          <width>111</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Client Email</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="Edit_Client_Name_lineEdit">
+        <property name="geometry">
+         <rect>
+          <x>320</x>
+          <y>100</y>
+          <width>201</width>
+          <height>31</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="Edit_Client_id_lineEdit">
+        <property name="geometry">
+         <rect>
+          <x>320</x>
+          <y>220</y>
+          <width>201</width>
+          <height>31</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
       <string>Page</string>
@@ -1209,12 +1640,12 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>831</width>
-        <height>411</height>
+        <width>851</width>
+        <height>441</height>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_7">
        <attribute name="title">
@@ -1223,9 +1654,9 @@
        <widget class="QTableWidget" name="Categories_tableWidget">
         <property name="geometry">
          <rect>
-          <x>-10</x>
+          <x>0</x>
           <y>100</y>
-          <width>841</width>
+          <width>831</width>
           <height>271</height>
          </rect>
         </property>
@@ -1236,12 +1667,7 @@
         </property>
         <column>
          <property name="text">
-          <string>Id</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Category Name</string>
+          <string>Categories</string>
          </property>
         </column>
        </widget>
@@ -1302,9 +1728,9 @@
        <widget class="QTableWidget" name="Authors_tableWidget">
         <property name="geometry">
          <rect>
-          <x>-10</x>
+          <x>0</x>
           <y>100</y>
-          <width>841</width>
+          <width>831</width>
           <height>271</height>
          </rect>
         </property>
@@ -1315,12 +1741,7 @@
         </property>
         <column>
          <property name="text">
-          <string>New Column</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Id</string>
+          <string>Authors</string>
          </property>
         </column>
        </widget>
@@ -1368,9 +1789,9 @@
        <widget class="QTableWidget" name="Publisher_tableWidget">
         <property name="geometry">
          <rect>
-          <x>-10</x>
+          <x>0</x>
           <y>100</y>
-          <width>841</width>
+          <width>831</width>
           <height>271</height>
          </rect>
         </property>
@@ -1379,11 +1800,6 @@
           <pointsize>8</pointsize>
          </font>
         </property>
-        <column>
-         <property name="text">
-          <string>Id</string>
-         </property>
-        </column>
         <column>
          <property name="text">
           <string>Publisher Name</string>
@@ -1547,6 +1963,37 @@
      </property>
     </widget>
    </widget>
+   <widget class="QPushButton" name="client_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>240</y>
+      <width>71</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>icons/Authentication.png</normaloff>icons/Authentication.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
+    </property>
+   </widget>
+   <zorder>theme_groupBox</zorder>
+   <zorder>dayToDay_pushButton</zorder>
+   <zorder>book_pushButton</zorder>
+   <zorder>user_pushButton</zorder>
+   <zorder>setting_pushButton</zorder>
+   <zorder>theme_pushButton</zorder>
+   <zorder>main_tabWidget</zorder>
+   <zorder>client_pushButton</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

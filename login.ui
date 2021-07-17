@@ -69,6 +69,12 @@
      <pointsize>12</pointsize>
     </font>
    </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="echoMode">
+    <enum>QLineEdit::Password</enum>
+   </property>
    <property name="placeholderText">
     <string>Enter Password</string>
    </property>
