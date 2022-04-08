@@ -16,8 +16,9 @@ The Main functions application performs are:
 - add and delete authors, book categories, publishers
 - Export customers data, books data, and day to day operations data to excel files.
 
+Database Schema
 
-
+![Library Management Database Schema](https://user-images.githubusercontent.com/43063413/162486008-a15e78d8-765a-4127-95d0-185c1d4ae76e.png)
 
 
 
